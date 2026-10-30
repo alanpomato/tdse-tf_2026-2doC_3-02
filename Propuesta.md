@@ -60,6 +60,7 @@ En la Tabla 1.1 se presenta la matriz de decisión utilizada para comparar las a
 | **Puntaje Total** |  | **352** |  | **449** |  | **360** | 
 
 *Tabla 1.1: Comparación de alternativas de proyecto.*
+
 Considerando los resultados de la Tabla 1.2, se selecciona la **Alternativa 2: Máquina expendedora escalable**. Esta opción presenta un equilibrio entre la funcionalidad esperada, la viabilidad de implementación y la posibilidad de ampliar el sistema.
 
 A diferencia de la alternativa básica, permite proyectar una solución con mayores prestaciones y posibilidades de crecimiento. Por otro lado, comenzar con tres canales de despacho desde el inicio incrementaría la complejidad de integración y las necesidades de hardware.
