@@ -1,22 +1,10 @@
+![Logo Fiuba](LOGO_FIUBA.jpeg)
 # Propuesta de Proyecto Final: Máquina Expendedora Inteligente
 
 **Universidad de Buenos Aires — Facultad de Ingeniería**
 
 **Asignatura:** Taller de Sistemas Embebidos (TdSE)
 
-**Periodo:** 2do Cuatrimestre de 2026
-
-Fecha Límite de Entrega **(Deadline):** Semana 11 de cursada
-
-## Información del Equipo
-
-* **Autores:**
-
-  * Delle Coste Mateo (Padrón: 112543)
-
-  * Guerrero Deivy (Padrón: 110420)
-
-  * Pomato Alan (Padrón: 94721)
 
 ## Control de Entregas y Normas del Repositorio
 
@@ -56,7 +44,8 @@ Para comparar estas alternativas, se tienen en cuenta seis aspectos característ
 
 * **Interés personal (7):** Motivación del equipo para desarrollar el proyecto y aplicar los conocimientos adquiridos en la materia.
 
-#### Tabla 1.2: Comparación de Alternativas de Proyecto
+#### Tabla 1.1: Comparación de Alternativas de Proyecto
+En la Tabla 1.1 se presenta la matriz de decisión utilizada para comparar las alternativas propuestas en función de los aspectos ponderados:
 
 | Criterio (Ponderación) | Máquina Básica (Pts) | Máquina Básica (Pond) | Máquina Escalable (Pts) | Máquina Escalable (Pond) | Máquina Avanzada (Pts) | Máquina Avanzada (Pond) | 
 | ----- | ----- | ----- | ----- | ----- | ----- | ----- | 
@@ -67,6 +56,7 @@ Para comparar estas alternativas, se tienen en cuenta seis aspectos característ
 | **Escalabilidad (9)** | 3 | 27 | 10 | 90 | 7 | 63 | 
 | **Interés personal (7)** | 6 | 42 | 9 | 63 | 8 | 56 | 
 | **Puntaje Total** |  | **352** |  | **449** |  | **360** | 
+*Tabla 1.1: Comparación de alternativas de proyecto.*
 
 ### 1.3. Selección del Proyecto
 
@@ -78,13 +68,15 @@ Por este motivo, se propone implementar inicialmente un canal de despacho, verif
 
 ### 1.3.1. Diagrama en Bloques
 
-A continuación se esquematiza la arquitectura general del sistema y la interconexión entre el microcontrolador STM32, la interfaz de usuario, los sensores, actuadores y los módulos de comunicación.
+En la Figura 1 se esquematiza la arquitectura general del sistema y la interconexión entre el microcontrolador STM32, la interfaz de usuario, los sensores, actuadores y los módulos de comunicación.
 
 ![Diagrama en bloques](Diagrama_de_estados.png)
 
+El sistema está estructurado en torno a un microcontrolador **STM32** como unidad central de procesamiento, encargada del control de eventos, la lógica de estados de venta y el manejo de los periféricos. La **interfaz de usuario** local se compone de una pantalla LCD con bus I2C para desplegar información de estado, menú y precios, sumada a botones y un teclado/joystick para la selección de productos y navegación. El **módulo de despacho** controla los motores de los canales de entrega mediante señales PWM/GPIO, supervisado por un conjunto de **sensores** (sensor óptico de entrega para verificar la salida real del producto, sensores de stock y de temperatura). La persistencia de datos (precios e inventario) se almacena en **memoria Flash interna/EEPROM**. Por último, la **comunicación inalámbrica** se establece mediante un módulo Bluetooth (vía UART), el cual vincula la máquina expendedora con una **aplicación móvil** encargada del monitoreo remoto de ventas y la reposición de stock.
+
 ## 2. Elicitación de Requisitos y Casos de Uso
 
-Actualmente en Argentina existen soluciones comerciales de máquinas expendedoras inteligentes (como las ofrecidas por Vendify y Smart Vending) que incorporan selección de productos, sistemas de pago digital, monitoreo remoto del inventario y consulta de ventas.
+Actualmente en Argentina existen soluciones comerciales de máquinas expendedoras inteligentes, como las ofrecidas por [Vendify](https://www.vendify.com.ar/) y [Smart Vending](https://www.smartvending.com.ar/), que incorporan selección de productos, sistemas de pago digital, monitoreo remoto del inventario y consulta de ventas.
 
 Frente a estas soluciones, este proyecto propone desarrollar un prototipo de menor escala y costo de implementación, cuya arquitectura modular permita comenzar con un canal de despacho y ampliar progresivamente su capacidad hasta tres productos. Asimismo, el desarrollo propio brinda flexibilidad para adaptar el hardware y el software a las necesidades del sistema.
 
@@ -111,3 +103,41 @@ Frente a estas soluciones, este proyecto propone desarrollar un prototipo de men
 |  | **5.2** | La aplicación permitirá consultar el inventario, las ventas registradas y la recaudación acumulada. | 
 |  | **5.3** | La aplicación permitirá registrar la reposición de productos y actualizar el inventario. | 
 |  | **5.4** | El sistema enviará a la aplicación el resultado de las operaciones solicit | 
+*Tabla 2.1: Requisitos funcionales del proyecto.*
+
+### 2.2. Casos de Uso
+
+A continuación se detallan los casos de uso principales que describen la interacción con los usuarios u operadores del sistema.
+
+#### CU-01: Compra de un producto
+
+| Elemento | Definición |
+| :--- | :--- |
+| **Disparador** | El usuario desea comprar uno de los productos ofrecidos por la máquina. |
+| **Precondiciones** | La máquina está encendida y se encuentra en modo NORMAL. El producto seleccionado tiene unidades disponibles. |
+| **Flujo principal** | 1. El usuario selecciona un producto.<br>2. El sistema informa su precio y solicita la confirmación de compra.<br>3. El usuario confirma el pago simulado.<br>4. El sistema acciona el mecanismo de despacho.<br>5. El sensor óptico detecta la salida del producto.<br>6. El sistema actualiza el inventario y registra la venta.<br>7. El display informa que la operación finalizó correctamente. |
+| **Flujos alternativos** | a. Si el producto no tiene stock, el sistema informa que no está disponible y no permite continuar con la compra.<br>b. Si no se detecta la salida del producto dentro del tiempo establecido, el sistema detiene el mecanismo, señaliza la falla y no registra la operación como una venta exitosa. |
+
+*Tabla 2.2: Caso de uso 1 - Compra de un producto.*
+
+#### CU-02: Configuración de precios
+
+| Elemento | Definición |
+| :--- | :--- |
+| **Disparador** | El operador desea modificar el precio de uno de los productos. |
+| **Precondiciones** | La máquina está encendida y el operador puede acceder al modo SET_UP. |
+| **Flujo principal** | 1. El operador ingresa al menú de configuración.<br>2. Selecciona el producto cuyo precio desea modificar.<br>3. Introduce el nuevo precio mediante la interfaz local.<br>4. El sistema valida el valor ingresado.<br>5. El operador confirma la modificación.<br>6. El sistema guarda el nuevo precio en la memoria Flash interna y confirma la operación. |
+| **Flujos alternativos** | a. Si el precio ingresado no es válido, el sistema informa el error y solicita un nuevo valor.<br>b. Si no se confirma la modificación, el sistema conserva el precio anterior. |
+
+*Tabla 2.3: Caso de uso 2 - Configuración de precios.*
+
+#### CU-03: Consulta de ventas y reposición de inventario
+
+| Elemento | Definición |
+| :--- | :--- |
+| **Disparador** | El operador desea consultar el inventario o registrar la reposición de productos desde la aplicación móvil. |
+| **Precondiciones** | La máquina está encendida y la aplicación móvil está conectada al módulo HM-10 mediante Bluetooth. |
+| **Flujo principal** | 1. El operador solicita desde la aplicación la información del inventario.<br>2. El sistema envía el stock disponible, las ventas registradas y la recaudación acumulada.<br>3. El operador selecciona el producto que desea reponer e introduce la cantidad agregada.<br>4. La aplicación envía la solicitud al STM32.<br>5. El sistema valida la cantidad y actualiza el inventario.<br>6. La aplicación informa el resultado de la operación. |
+| **Flujos alternativos** | a. Si no se establece o se pierde la conexión Bluetooth, la operación no puede completarse y la aplicación informa el inconveniente.<br>b. Si la cantidad ingresada no es válida, el sistema rechaza la actualización y comunica el error al operador. |
+
+*Tabla 2.4: Caso de uso 3 - Consulta de ventas y reposición de inventario.*
