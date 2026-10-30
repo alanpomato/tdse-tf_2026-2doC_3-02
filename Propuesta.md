@@ -1,4 +1,6 @@
-![Logo Fiuba](LOGO_FIUBA.jpeg)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/fiuba/logo/master/fiuba_logo.png" alt="Logo FIUBA" width="220"/>
+</p>
 # Propuesta de Proyecto Final: Máquina Expendedora Inteligente
 
 **Universidad de Buenos Aires — Facultad de Ingeniería**
