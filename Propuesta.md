@@ -44,6 +44,8 @@ Para comparar estas alternativas, se tienen en cuenta seis aspectos característ
 
 * **Interés personal (7):** Motivación del equipo para desarrollar el proyecto y aplicar los conocimientos adquiridos en la materia.
 
+### 1.3. Selección del Proyecto
+
 #### Tabla 1.1: Comparación de Alternativas de Proyecto
 En la Tabla 1.1 se presenta la matriz de decisión utilizada para comparar las alternativas propuestas en función de los aspectos ponderados:
 
@@ -56,10 +58,8 @@ En la Tabla 1.1 se presenta la matriz de decisión utilizada para comparar las a
 | **Escalabilidad (9)** | 3 | 27 | 10 | 90 | 7 | 63 | 
 | **Interés personal (7)** | 6 | 42 | 9 | 63 | 8 | 56 | 
 | **Puntaje Total** |  | **352** |  | **449** |  | **360** | 
+
 *Tabla 1.1: Comparación de alternativas de proyecto.*
-
-### 1.3. Selección del Proyecto
-
 Considerando los resultados de la Tabla 1.2, se selecciona la **Alternativa 2: Máquina expendedora escalable**. Esta opción presenta un equilibrio entre la funcionalidad esperada, la viabilidad de implementación y la posibilidad de ampliar el sistema.
 
 A diferencia de la alternativa básica, permite proyectar una solución con mayores prestaciones y posibilidades de crecimiento. Por otro lado, comenzar con tres canales de despacho desde el inicio incrementaría la complejidad de integración y las necesidades de hardware.
@@ -103,6 +103,7 @@ Frente a estas soluciones, este proyecto propone desarrollar un prototipo de men
 |  | **5.2** | La aplicación permitirá consultar el inventario, las ventas registradas y la recaudación acumulada. | 
 |  | **5.3** | La aplicación permitirá registrar la reposición de productos y actualizar el inventario. | 
 |  | **5.4** | El sistema enviará a la aplicación el resultado de las operaciones solicit | 
+
 *Tabla 2.1: Requisitos funcionales del proyecto.*
 
 ### 2.2. Casos de Uso
