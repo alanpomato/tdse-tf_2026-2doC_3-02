@@ -61,7 +61,7 @@ En la Tabla 1.1 se presenta la matriz de decisión utilizada para comparar las a
 
 *Tabla 1.1: Comparación de alternativas de proyecto.*
 
-Considerando los resultados de la Tabla 1.2, se selecciona la **Alternativa 2: Máquina expendedora escalable**. Esta opción presenta un equilibrio entre la funcionalidad esperada, la viabilidad de implementación y la posibilidad de ampliar el sistema.
+Considerando los resultados de la Tabla 1.1, se selecciona la **Alternativa 2: Máquina expendedora escalable**. Esta opción presenta un equilibrio entre la funcionalidad esperada, la viabilidad de implementación y la posibilidad de ampliar el sistema.
 
 A diferencia de la alternativa básica, permite proyectar una solución con mayores prestaciones y posibilidades de crecimiento. Por otro lado, comenzar con tres canales de despacho desde el inicio incrementaría la complejidad de integración y las necesidades de hardware.
 
@@ -71,7 +71,7 @@ Por este motivo, se propone implementar inicialmente un canal de despacho, verif
 
 En la Figura 1 se esquematiza la arquitectura general del sistema y la interconexión entre el microcontrolador STM32, la interfaz de usuario, los sensores, actuadores y los módulos de comunicación.
 
-![Diagrama en bloques](Diagrama_de_estados.png)
+![Diagrama en bloques](Diagrama_en_Bloques.png)
 
 El sistema está estructurado en torno a un microcontrolador **STM32** como unidad central de procesamiento, encargada del control de eventos, la lógica de estados de venta y el manejo de los periféricos. La **interfaz de usuario** local se compone de una pantalla LCD con bus I2C para desplegar información de estado, menú y precios, sumada a botones y un teclado/joystick para la selección de productos y navegación. El **módulo de despacho** controla los motores de los canales de entrega mediante señales PWM/GPIO, supervisado por un conjunto de **sensores** (sensor óptico de entrega para verificar la salida real del producto, sensores de stock y de temperatura). La persistencia de datos (precios e inventario) se almacena en **memoria Flash interna/EEPROM**. Por último, la **comunicación inalámbrica** se establece mediante un módulo Bluetooth (vía UART), el cual vincula la máquina expendedora con una **aplicación móvil** encargada del monitoreo remoto de ventas y la reposición de stock.
 
