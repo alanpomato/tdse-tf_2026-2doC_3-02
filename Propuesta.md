@@ -71,7 +71,7 @@ Por este motivo, se propone implementar inicialmente un canal de despacho, verif
 
 En la Figura 1 se esquematiza la arquitectura general del sistema y la interconexión entre el microcontrolador STM32, la interfaz de usuario, los sensores, actuadores y los módulos de comunicación.
 
-![Diagrama en bloques](Diagrama_en_Bloques.png)
+![Diagrama en bloques](Diagrama_en_bloques.png)
 
 El sistema está estructurado en torno a un microcontrolador **STM32** como unidad central de procesamiento, encargada del control de eventos, la lógica de estados de venta y el manejo de los periféricos. La **interfaz de usuario** local se compone de una pantalla LCD con bus I2C para desplegar información de estado, menú y precios, sumada a botones y un teclado/joystick para la selección de productos y navegación. El **módulo de despacho** controla los motores de los canales de entrega mediante señales PWM/GPIO, supervisado por un conjunto de **sensores** (sensor óptico de entrega para verificar la salida real del producto, sensores de stock y de temperatura). La persistencia de datos (precios e inventario) se almacena en **memoria Flash interna/EEPROM**. Por último, la **comunicación inalámbrica** se establece mediante un módulo Bluetooth (vía UART), el cual vincula la máquina expendedora con una **aplicación móvil** encargada del monitoreo remoto de ventas y la reposición de stock.
 
