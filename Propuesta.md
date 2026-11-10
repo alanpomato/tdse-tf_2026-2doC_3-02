@@ -5,13 +5,6 @@
 
 **Asignatura:** Taller de Sistemas Embebidos (TdSE)
 
-
-## Control de Entregas y Normas del Repositorio
-
-* **Modalidad de actualización:** Asentar y modificar los detalles de la entrega en este archivo (`Propuesta.md`) antes de realizar la creación o integración de cada *branch*.
-
-* **Formato:** Markdown estándar para renderizado directo en GitHub.
-
 ## 1. Selección del Proyecto a Implementar
 
 ### 1.1. Objetivo del Proyecto y Resultados Esperados
@@ -46,7 +39,6 @@ Para comparar estas alternativas, se tienen en cuenta seis aspectos característ
 
 ### 1.3. Selección del Proyecto
 
-#### Tabla 1.1: Comparación de Alternativas de Proyecto
 En la Tabla 1.1 se presenta la matriz de decisión utilizada para comparar las alternativas propuestas en función de los aspectos ponderados:
 
 | Criterio (Ponderación) | Máquina Básica (Pts) | Máquina Básica (Pond) | Máquina Escalable (Pts) | Máquina Escalable (Pond) | Máquina Avanzada (Pts) | Máquina Avanzada (Pond) | 
@@ -73,6 +65,8 @@ En la Figura 1 se esquematiza la arquitectura general del sistema y la intercone
 
 ![Diagrama en bloques](Diagrama_en_bloques.png)
 
+*Figura 1: Diagrama en bloques del sistema.*
+
 El sistema está estructurado en torno a un microcontrolador **STM32** como unidad central de procesamiento, encargada del control de eventos, la lógica de estados de venta y el manejo de los periféricos. La **interfaz de usuario** local se compone de una pantalla LCD con bus I2C para desplegar información de estado, menú y precios, sumada a botones y un teclado/joystick para la selección de productos y navegación. El **módulo de despacho** controla los motores de los canales de entrega mediante señales PWM/GPIO, supervisado por un conjunto de **sensores** (sensor óptico de entrega para verificar la salida real del producto, sensores de stock y de temperatura). La persistencia de datos (precios e inventario) se almacena en **memoria Flash interna/EEPROM**. Por último, la **comunicación inalámbrica** se establece mediante un módulo Bluetooth (vía UART), el cual vincula la máquina expendedora con una **aplicación móvil** encargada del monitoreo remoto de ventas y la reposición de stock.
 
 ## 2. Elicitación de Requisitos y Casos de Uso
@@ -82,6 +76,8 @@ Actualmente en Argentina existen soluciones comerciales de máquinas expendedora
 Frente a estas soluciones, este proyecto propone desarrollar un prototipo de menor escala y costo de implementación, cuya arquitectura modular permita comenzar con un canal de despacho y ampliar progresivamente su capacidad hasta tres productos. Asimismo, el desarrollo propio brinda flexibilidad para adaptar el hardware y el software a las necesidades del sistema.
 
 ### 2.1. Requisitos del Proyecto
+
+En la Tabla 2.1 se presentan los requisitos funcionales del proyecto, agrupados por grupo funcional, con su identificador y descripción.
 
 | Grupo | ID | Descripción | 
 | ----- | ----- | ----- | 
