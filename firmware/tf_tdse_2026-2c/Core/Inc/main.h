@@ -74,10 +74,10 @@ void Error_Handler(void);
 #define BTN_ESC_GPIO_Port GPIOB
 #define SW_SETUP_Pin GPIO_PIN_15
 #define SW_SETUP_GPIO_Port GPIOB
-#define LED_EXT_A_Pin GPIO_PIN_8
-#define LED_EXT_A_GPIO_Port GPIOA
-#define LED_EXT_B_Pin GPIO_PIN_9
-#define LED_EXT_B_GPIO_Port GPIOA
+#define BARRERA_IR_Pin GPIO_PIN_6
+#define BARRERA_IR_GPIO_Port GPIOC
+#define BTN_MONEDA_Pin GPIO_PIN_8
+#define BTN_MONEDA_GPIO_Port GPIOC
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14

@@ -56,8 +56,7 @@
 
 /********************** internal data declaration ****************************/
 const task_actuator_cfg_t task_actuator_cfg_list[] = {
-	{ID_LED_BARRIER_OPEN,  LED_EXT_A_PORT,  LED_EXT_A_PIN, LED_EXT_A_ON,  LED_EXT_A_OFF, DEL_LED_MAX},
-	{ID_LED_BARRIER_CLOSE,  LED_EXT_B_PORT,  LED_EXT_B_PIN, LED_EXT_B_ON,  LED_EXT_B_OFF, DEL_LED_MAX}
+
 };
 
 task_actuator_dta_t task_actuator_dta_list[ACTUATOR_DTA_QTY];
@@ -72,7 +71,8 @@ const char *p_task_actuator__ 		= "(Update by Time Code, period = 1mS)";
 
 /********************** external data declaration ****************************/
 
-/********************** external functions definition ************************/
+/********************** external fu
+ * nctions definition ************************/
 void task_actuator_init(void *parameters)
 {
 	uint32_t index;

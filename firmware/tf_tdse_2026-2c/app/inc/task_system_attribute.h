@@ -51,7 +51,9 @@ typedef enum task_system_ev {EV_SYS_ENTER,
 							EV_SYS_ESC,
 							EV_SYS_SETUP,
 							EV_SYS_NORMAL,
-							EV_SYS_NONE} task_system_ev_t; // Este solo está puesto xq lo necesita el sensor.
+							EV_SYS_NONE,
+							EV_SYS_ENTREGADO,
+							EV_SYS_MONEDA} task_system_ev_t; // Este solo está puesto xq lo necesita el sensor.
 
 /* State of Task System */
 typedef enum task_system_st {ST_SYS_PRUEBA,
