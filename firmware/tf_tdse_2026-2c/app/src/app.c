@@ -12,7 +12,8 @@
 #include "board.h"
 #include "app_it.h"
 #include "task_system.h"
-#include "task_actuator.h"
+
+#include "task_actuator_gpio.h"
 
 #include "task_sensor_btn.h"
 #include "task_sensor_adc.h"
@@ -45,7 +46,7 @@ const task_cfg_t task_cfg_list[]	= {
 		{task_sensor_btn_init, 		task_sensor_btn_update, 	NULL},
 		{task_sensor_adc_init, 		task_sensor_adc_update, 	NULL},
 		{task_system_init, 		task_system_update, 	NULL},
-		{task_actuator_init,	task_actuator_update, 	NULL}
+		{task_actuator_gpio_init,	task_actuator_gpio_update, 	NULL}
 };
 
 #define TASK_QTY	(sizeof(task_cfg_list)/sizeof(task_cfg_t))

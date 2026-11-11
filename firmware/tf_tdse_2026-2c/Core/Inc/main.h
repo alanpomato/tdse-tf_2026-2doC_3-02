@@ -68,6 +68,8 @@ void Error_Handler(void);
 #define USART_RX_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
+#define BUZZER_Pin GPIO_PIN_5
+#define BUZZER_GPIO_Port GPIOC
 #define BTN_ENTER_Pin GPIO_PIN_12
 #define BTN_ENTER_GPIO_Port GPIOB
 #define BTN_NEXT_Pin GPIO_PIN_13
@@ -80,6 +82,8 @@ void Error_Handler(void);
 #define BARRERA_IR_GPIO_Port GPIOC
 #define BTN_MONEDA_Pin GPIO_PIN_8
 #define BTN_MONEDA_GPIO_Port GPIOC
+#define LED_STATUS_Pin GPIO_PIN_9
+#define LED_STATUS_GPIO_Port GPIOC
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14

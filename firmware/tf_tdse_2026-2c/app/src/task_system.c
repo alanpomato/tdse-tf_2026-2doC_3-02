@@ -11,8 +11,8 @@
 /* Application & Tasks includes */
 #include "board.h"
 #include "app.h"
-#include "task_actuator_attribute.h"
-#include "task_actuator_interface.h"
+#include "task_actuator_gpio_interface.h"
+
 #include "task_system_attribute.h"
 #include "task_system_interface.h"
 #include "task_system.h"
@@ -88,8 +88,8 @@ void task_system_init(void *parameters)
 					GET_NAME(b_event), (b_event ? "true" : "false"));
 	}
 
-	put_event_task_actuator(EV_LED_OFF, ID_LED_BARRIER_OPEN);
-	put_event_task_actuator(EV_LED_ON,  ID_LED_BARRIER_CLOSE);
+	put_event_task_actuator_gpio(EV_ON, BUZZER);
+	put_event_task_actuator_gpio(EV_ON,  LED_STATUS);
 
 	task_system_set_mode(NORMAL);
 
@@ -118,9 +118,14 @@ void task_system_update(void *parameters)
 void task_system_normal_statechart(void)
 {
 	task_system_dta_t *p_task_system_dta;
-
+	uint16_t i = 0;
 	/* Update Task System Data Pointer */
 	p_task_system_dta = &task_system_dta_list[NORMAL];
+
+	if (i == 0){
+		put_event_task_actuator_gpio(EV_BLINK, BUZZER);
+		put_event_task_actuator_gpio(EV_ON,  LED_STATUS);
+	}
 
 	if (true == any_event_task_system())
 	{

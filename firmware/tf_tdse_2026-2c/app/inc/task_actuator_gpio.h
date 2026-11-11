@@ -49,8 +49,8 @@ extern "C" {
 /********************** external data declaration ****************************/
 
 /********************** external functions declaration ***********************/
-extern void task_actuator_init(void *parameters);
-extern void task_actuator_update(void *parameters);
+extern void task_actuator_gpio_init(void *parameters);
+extern void task_actuator_gpio_update(void *parameters);
 
 /********************** End of CPP guard *************************************/
 #ifdef __cplusplus
