@@ -12,6 +12,8 @@
 #include "app.h"
 #include "task_system_attribute.h"
 #include "task_system_interface.h"
+
+#include "task_sensor_btn.h"
 #include "task_sensor_btn_attribute.h"
 
 
@@ -20,11 +22,11 @@
 #define DEL_BTN_MED		25ul
 #define DEL_BTN_MAX		50ul
 
-#define SENSOR_CFG_QTY		(sizeof(task_sensor_cfg_list)/sizeof(task_sensor_cfg_t))
-#define SENSOR_DTA_QTY		SENSOR_CFG_QTY
+#define SENSOR_BTN_CFG_QTY		(sizeof(task_sensor_btn_cfg_list)/sizeof(task_sensor_btn_cfg_t))
+#define SENSOR_BTN_DTA_QTY		SENSOR_BTN_CFG_QTY
 
 /********************** CONFIGURACIÓN DE BOTONES -> Pongo los 3 botones para navegar en el menú + el switch entre SETUP/NORMAL ****************************/
-const task_sensor_cfg_t task_sensor_cfg_list[] = {
+const task_sensor_btn_cfg_t task_sensor_btn_cfg_list[] = {
 	{ID_BTN_ENTER,  BTN_ENTER_PORT,  BTN_ENTER_PIN,  BTN_ENTER_PRESSED, DEL_BTN_MAX,
 	EV_SYS_ENTER, EV_SYS_NONE},
 
@@ -48,10 +50,10 @@ const task_sensor_cfg_t task_sensor_cfg_list[] = {
 
 
 
-task_sensor_dta_t task_sensor_dta_list[SENSOR_DTA_QTY];
+task_sensor_btn_dta_t task_sensor_btn_dta_list[SENSOR_BTN_DTA_QTY];
 
 /********************** internal functions declaration ***********************/
-void task_sensor_statechart(uint32_t index);
+void task_sensor_btn_statechart(uint32_t index);
 
 /********************** internal data definition *****************************/
 const char *p_task_sensor 		= "Task Sensor (Sensor Statechart)";
@@ -61,12 +63,12 @@ const char *p_task_sensor__ 	= "(Update by Time Code, period = 1mS)";
 /********************** external data declaration ****************************/
 
 /********************** external functions definition ************************/
-void task_sensor_init(void *parameters)
+void task_sensor_btn_init(void *parameters)
 {
 	uint32_t index;
-	task_sensor_dta_t *p_task_sensor_dta;
-	task_sensor_st_t state;
-	task_sensor_ev_t event;
+	task_sensor_btn_dta_t *p_task_sensor_dta;
+	task_sensor_btn_st_t state;
+	task_sensor_btn_ev_t event;
 
 	/* Print out: Task Initialized */
 	LOGGER_INFO(" ");
@@ -75,10 +77,10 @@ void task_sensor_init(void *parameters)
 	LOGGER_INFO("   %s is a %s", GET_NAME(task_sensor), p_task_sensor_);
 	LOGGER_INFO("   %s is a %s", GET_NAME(task_sensor), p_task_sensor__);
 
-	for (index = 0; SENSOR_DTA_QTY > index; index++)
+	for (index = 0; SENSOR_BTN_DTA_QTY > index; index++)
 	{
 		/* Update Task Sensor Data Pointer */
-		p_task_sensor_dta = &task_sensor_dta_list[index];
+		p_task_sensor_dta = &task_sensor_btn_dta_list[index];
 
 		/* Init & Print out: Index & Task execution FSM */
 		state = ST_BTN_UP;
@@ -97,25 +99,25 @@ void task_sensor_init(void *parameters)
 	}
 }
 
-void task_sensor_update(void *parameters)
+void task_sensor_btn_update(void *parameters)
 {
 	uint32_t index;
 
-	for (index = 0; SENSOR_DTA_QTY > index; index++)
+	for (index = 0; SENSOR_BTN_DTA_QTY > index; index++)
 	{
 		/* Run Task Statechart */
-		task_sensor_statechart(index);
+		task_sensor_btn_statechart(index);
 	}
 }
 
-void task_sensor_statechart(uint32_t index)
+void task_sensor_btn_statechart(uint32_t index)
 {
-	const task_sensor_cfg_t *p_task_sensor_cfg;
-	task_sensor_dta_t *p_task_sensor_dta;
+	const task_sensor_btn_cfg_t *p_task_sensor_cfg;
+	task_sensor_btn_dta_t *p_task_sensor_dta;
 
 	/* Update Task Sensor Configuration & Data Pointer */
-	p_task_sensor_cfg = &task_sensor_cfg_list[index];
-	p_task_sensor_dta = &task_sensor_dta_list[index];
+	p_task_sensor_cfg = &task_sensor_btn_cfg_list[index];
+	p_task_sensor_dta = &task_sensor_btn_dta_list[index];
 
 
 	if (p_task_sensor_cfg->pressed == HAL_GPIO_ReadPin(p_task_sensor_cfg->gpio_port, p_task_sensor_cfg->pin))
