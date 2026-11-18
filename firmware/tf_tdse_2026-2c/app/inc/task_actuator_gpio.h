@@ -1,6 +1,6 @@
 
-#ifndef TASK_ACTUATOR_INTERFACE_H_
-#define TASK_ACTUATOR_INTERFACE_H_
+#ifndef TASK_ACTUATOR_H_
+#define TASK_ACTUATOR_H_
 
 /********************** CPP guard ********************************************/
 #ifdef __cplusplus
@@ -16,13 +16,14 @@ extern "C" {
 /********************** external data declaration ****************************/
 
 /********************** external functions declaration ***********************/
-extern void put_event_task_actuator(task_actuator_ev_t event, task_actuator_id_t identifier);
+extern void task_actuator_gpio_init(void *parameters);
+extern void task_actuator_gpio_update(void *parameters);
 
 /********************** End of CPP guard *************************************/
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* TASK_ACTUATOR_INTERFACE_H_ */
+#endif /* TASK_ACTUATOR_H_ */
 
 /********************** end of file ******************************************/
