@@ -26,9 +26,10 @@ bool get_temperatura(uint32_t *t)
 {
 	if (!task_sensor_adc_dta_list[0].adc_ready) return false; // verifico que flag esté alta.
 
-	*t = 3300  * task_sensor_adc_dta_list[0].adc_value / 4096; // esto me convierte a milivolts el valor leído --> Falta pasarlo a °C
+	*t = (uint32_t)task_sensor_adc_dta_list[0].adc_value * 60 / 4096;   // °C, 0..60
 
 	task_sensor_adc_dta_list[0].adc_ready=false; // bajo flag
+
 	return true;
 }
 

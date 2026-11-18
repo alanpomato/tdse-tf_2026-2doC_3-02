@@ -24,7 +24,7 @@ typedef enum task_actuator_display_ev {EV_DSP_IDLE,
 typedef enum task_actuator_display_st {ST_DSP_IDLE,
 							  ST_DSP_UPDATE} task_actuator_display_st_t;
 
-typedef enum { PANTALLA_PRUEBA } pantalla_t;
+typedef enum { PANTALLA_ESPERA, PANTALLA_SELECCION, PANTALLA_ENTREGANDO, PANTALLA_SIN_STOCK_SIN_CREDITO, PANTALLA_FALLA_TEMPERATURA, PANTALLA_FALLA_ATASCO } pantalla_t;
 
 typedef struct
 {

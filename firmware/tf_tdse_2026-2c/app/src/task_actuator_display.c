@@ -172,9 +172,34 @@ void task_actuator_display_setup(task_actuator_display_dta_t *p_dta)
 
 	switch (p_dta->pantalla)
 	{
-		case PANTALLA_PRUEBA:
-			snprintf(line0, sizeof(line0), "Prueba");
-			snprintf(line1, sizeof(line1), "Probinha");
+		case PANTALLA_ESPERA:
+			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line1, sizeof(line1), "Espera");
+			break;
+
+		case PANTALLA_SELECCION:
+			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line1, sizeof(line1), "Seleccion");
+			break;
+
+		case PANTALLA_ENTREGANDO:
+			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line1, sizeof(line1), "Entregando");
+			break;
+
+		case PANTALLA_SIN_STOCK_SIN_CREDITO:
+			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line1, sizeof(line1), "Sin Stock");
+			break;
+
+		case PANTALLA_FALLA_TEMPERATURA:
+			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line1, sizeof(line1), "Temperatura");
+			break;
+
+		case PANTALLA_FALLA_ATASCO:
+			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line1, sizeof(line1), "Atasco");
 			break;
 
 		default:
