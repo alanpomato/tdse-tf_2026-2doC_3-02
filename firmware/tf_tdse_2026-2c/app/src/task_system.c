@@ -13,10 +13,12 @@
 #include "app.h"
 #include "task_actuator_gpio_interface.h"
 
+#include "task_actuator_pwm_interface.h"
+#include "task_actuator_display_interface.h"
+
 #include "task_system_attribute.h"
 #include "task_system_interface.h"
 #include "task_system.h"
-
 
 #include "task_sensor_adc_interface.h"
 
@@ -91,6 +93,9 @@ void task_system_init(void *parameters)
 	put_event_task_actuator_gpio(EV_ON, BUZZER);
 	put_event_task_actuator_gpio(EV_ON,  LED_STATUS);
 
+
+
+
 	task_system_set_mode(NORMAL);
 
 
@@ -118,13 +123,17 @@ void task_system_update(void *parameters)
 void task_system_normal_statechart(void)
 {
 	task_system_dta_t *p_task_system_dta;
-	uint16_t i = 0;
+	static uint16_t i = 0;
 	/* Update Task System Data Pointer */
 	p_task_system_dta = &task_system_dta_list[NORMAL];
 
+	//Flag única de prueba.
 	if (i == 0){
 		put_event_task_actuator_gpio(EV_BLINK, BUZZER);
 		put_event_task_actuator_gpio(EV_ON,  LED_STATUS);
+		put_event_task_actuator_pwm(EV_PWM_ON, CANAL_1);
+		put_event_task_actuator_pwm(EV_PWM_ON, CANAL_2);
+		set_display(PANTALLA_PRUEBA);
 	}
 
 	if (true == any_event_task_system())
@@ -135,6 +144,12 @@ void task_system_normal_statechart(void)
 
 	switch (p_task_system_dta->state)
 	{
+
+			/////////////
+
+			////////////
+
+
 		default:
 
 			p_task_system_dta->tick  = DEL_SYS_MIN;
@@ -144,6 +159,7 @@ void task_system_normal_statechart(void)
 
 			break;
 	}
+	i++;
 }
 
 void task_system_set_mode(task_system_mode_t task_system_mode)
@@ -152,3 +168,5 @@ void task_system_set_mode(task_system_mode_t task_system_mode)
 }
 
 /********************** end of file ******************************************/
+
+

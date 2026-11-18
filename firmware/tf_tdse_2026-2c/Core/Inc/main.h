@@ -49,6 +49,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -70,6 +72,8 @@ void Error_Handler(void);
 #define LD2_GPIO_Port GPIOA
 #define BUZZER_Pin GPIO_PIN_5
 #define BUZZER_GPIO_Port GPIOC
+#define D6_Pin GPIO_PIN_10
+#define D6_GPIO_Port GPIOB
 #define BTN_ENTER_Pin GPIO_PIN_12
 #define BTN_ENTER_GPIO_Port GPIOB
 #define BTN_NEXT_Pin GPIO_PIN_13
@@ -80,16 +84,26 @@ void Error_Handler(void);
 #define SW_SETUP_GPIO_Port GPIOB
 #define BARRERA_IR_Pin GPIO_PIN_6
 #define BARRERA_IR_GPIO_Port GPIOC
+#define D9_Pin GPIO_PIN_7
+#define D9_GPIO_Port GPIOC
 #define BTN_MONEDA_Pin GPIO_PIN_8
 #define BTN_MONEDA_GPIO_Port GPIOC
 #define LED_STATUS_Pin GPIO_PIN_9
 #define LED_STATUS_GPIO_Port GPIOC
+#define D7_Pin GPIO_PIN_8
+#define D7_GPIO_Port GPIOA
+#define D8_Pin GPIO_PIN_9
+#define D8_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
+#define D5_Pin GPIO_PIN_4
+#define D5_GPIO_Port GPIOB
+#define D4_Pin GPIO_PIN_5
+#define D4_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
