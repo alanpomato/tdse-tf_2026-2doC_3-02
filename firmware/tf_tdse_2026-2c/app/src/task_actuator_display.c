@@ -173,33 +173,58 @@ void task_actuator_display_setup(task_actuator_display_dta_t *p_dta)
 	switch (p_dta->pantalla)
 	{
 		case PANTALLA_ESPERA:
-			snprintf(line0, sizeof(line0), "Pantalla");
-			snprintf(line1, sizeof(line1), "Espera");
-			break;
+				snprintf(line0, sizeof(line0), "NORMAL");
+				snprintf(line1, sizeof(line1), "Espera");
+				break;
 
 		case PANTALLA_SELECCION:
-			snprintf(line0, sizeof(line0), "Pantalla");
-			snprintf(line1, sizeof(line1), "Seleccion");
+	    	snprintf(line0, sizeof(line0), "Canal %u  $%4lu,%02lu",
+	             (unsigned)(p_dta->valores.seleccion + 1),
+	             (unsigned long)(p_dta->valores.precio_cv / 100),
+	             (unsigned long)(p_dta->valores.precio_cv % 100));
+			snprintf(line1, sizeof(line1), "Credito  $%4lu,%02lu",
+	             (unsigned long)(p_dta->valores.credito_cv / 100),
+	             (unsigned long)(p_dta->valores.credito_cv % 100));
 			break;
 
 		case PANTALLA_ENTREGANDO:
-			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line0, sizeof(line0), "NORMAL");
 			snprintf(line1, sizeof(line1), "Entregando");
 			break;
 
 		case PANTALLA_SIN_STOCK_SIN_CREDITO:
-			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line0, sizeof(line0), "NORMAL");
 			snprintf(line1, sizeof(line1), "Sin Stock");
 			break;
 
 		case PANTALLA_FALLA_TEMPERATURA:
-			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line0, sizeof(line0), "FALLA");
 			snprintf(line1, sizeof(line1), "Temperatura");
 			break;
 
 		case PANTALLA_FALLA_ATASCO:
-			snprintf(line0, sizeof(line0), "Pantalla");
+			snprintf(line0, sizeof(line0), "FALLA");
 			snprintf(line1, sizeof(line1), "Atasco");
+			break;
+
+		case PANTALLA_SETUP_MAIN:
+			snprintf(line0, sizeof(line0), "SETUP");
+			snprintf(line1, sizeof(line1), "MAIN");
+			break;
+
+		case PANTALLA_SETUP_MENU1:
+			snprintf(line0, sizeof(line0), "SETUP");
+			snprintf(line1, sizeof(line1), "MENU1");
+			break;
+
+		case PANTALLA_SETUP_MENU2:
+			snprintf(line0, sizeof(line0), "SETUP");
+			snprintf(line1, sizeof(line1), "MENU2");
+			break;
+
+		case PANTALLA_SETUP_MENU3:
+			snprintf(line0, sizeof(line0), "SETUP");
+			snprintf(line1, sizeof(line1), "MENU3");
 			break;
 
 		default:

@@ -8,7 +8,8 @@ extern "C" {
 #endif
 
 /********************** inclusions *******************************************/
-
+#include <stdbool.h>
+#include <stdint.h>
 /********************** macros ***********************************************/
 
 /********************** typedef **********************************************/
@@ -18,13 +19,34 @@ extern "C" {
 
 /* Events to excite Task Display */
 typedef enum task_actuator_display_ev {EV_DSP_IDLE,
-							  EV_DSP_UPDATE} task_actuator_display_ev_t;
+							  	  EV_DSP_UPDATE} task_actuator_display_ev_t;
 
 /* State of Task Display */
 typedef enum task_actuator_display_st {ST_DSP_IDLE,
-							  ST_DSP_UPDATE} task_actuator_display_st_t;
+							  	  ST_DSP_UPDATE} task_actuator_display_st_t;
 
-typedef enum { PANTALLA_ESPERA, PANTALLA_SELECCION, PANTALLA_ENTREGANDO, PANTALLA_SIN_STOCK_SIN_CREDITO, PANTALLA_FALLA_TEMPERATURA, PANTALLA_FALLA_ATASCO } pantalla_t;
+typedef enum { PANTALLA_ESPERA,
+				PANTALLA_SELECCION,
+				PANTALLA_ENTREGANDO,
+				PANTALLA_SIN_STOCK_SIN_CREDITO,
+				PANTALLA_FALLA_TEMPERATURA,
+				PANTALLA_FALLA_ATASCO,
+				PANTALLA_SETUP_MAIN,
+				PANTALLA_SETUP_MENU1,
+				PANTALLA_SETUP_MENU2,
+				PANTALLA_SETUP_MENU3
+} pantalla_t;
+
+typedef struct
+{
+	uint32_t			precio_cv;
+	uint16_t			seleccion;
+	uint32_t			credito_cv;
+	uint32_t				parametro;
+	uint32_t	stock;
+}display_valores_t;
+
+
 
 typedef struct
 {
@@ -37,6 +59,7 @@ typedef struct
 	uint32_t			column;
 	char				character;
 	pantalla_t 				pantalla;
+	display_valores_t valores;
 } task_actuator_display_dta_t;
 
 /********************** external data declaration ****************************/

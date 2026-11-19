@@ -31,8 +31,18 @@ typedef enum task_system_st {ST_SYS_ESPERA,
 							ST_SYS_ENTREGANDO,
 							ST_SYS_SIN_STOCK_FALTA_CREDITO,
 							ST_SYS_TEMPERATURA,
-							ST_SYS_ATASCO
+							ST_SYS_ATASCO,
+							ST_SYS_MAIN,
+							ST_SYS_MENU1,
+							ST_SYS_MENU2,
+							ST_SYS_MENU3
 							} task_system_st_t;
+
+typedef enum param{
+					PARAM_PRECIO, // en centavos
+					PARAM_STOCK,
+					PARAM_QTY
+					} param_t;
 
 typedef struct
 {
@@ -40,9 +50,12 @@ typedef struct
 	uint32_t	stock;
 } canal_t;
 
+
+
 typedef struct
 {
 	canal_t				canales[Q_CANALES];
+	param_t				parametro;
 	uint32_t			credito;
 	uint16_t			seleccion;
 	uint32_t			recaudado;

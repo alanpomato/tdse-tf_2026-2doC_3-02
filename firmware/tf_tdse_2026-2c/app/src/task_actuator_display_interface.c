@@ -42,9 +42,12 @@ void put_event_task_actuator_display(uint32_t char_column, uint32_t char_row, co
 	}
 }
 
-void set_display(pantalla_t pantalla){
+void set_display(pantalla_t pantalla, display_valores_t valores){
 	task_actuator_display_dta.pantalla = pantalla;
+	task_actuator_display_dta.valores = valores;
 	task_actuator_display_setup(&task_actuator_display_dta);
+
+
 
 }
 
