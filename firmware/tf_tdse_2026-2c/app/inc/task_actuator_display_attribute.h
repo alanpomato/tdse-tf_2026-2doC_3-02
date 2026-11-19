@@ -42,8 +42,8 @@ typedef struct
 	uint32_t			precio_cv;
 	uint16_t			seleccion;
 	uint32_t			credito_cv;
-	uint32_t				parametro;
-	uint32_t	stock;
+	uint32_t			parametro;
+	uint32_t			stock;
 }display_valores_t;
 
 

@@ -42,7 +42,7 @@
 #define DEL_SELECCION 30000ul
 #define DEL_ENTREGANDO 15000ul
 #define DEL_SIN_STOCK_FALTA_CREDITO 10000ul
-#define VAL_MONEDA 50000 // Centavos
+#define VAL_MONEDA 50000 // Centavos-> 500 pe
 #define SALTO_PRECIO 50000 // Centavos
 #define TOPE_PRECIO 1000000
 #define MAX_STOCK 10
