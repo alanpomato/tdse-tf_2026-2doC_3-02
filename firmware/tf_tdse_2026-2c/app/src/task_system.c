@@ -1,5 +1,3 @@
-
-
 /********************** inclusions *******************************************/
 /* Project includes */
 #include "main.h"
@@ -21,6 +19,8 @@
 #include "task_system.h"
 
 #include "task_sensor_adc_interface.h"
+
+#include "task_actuator_memoria_interface.h"
 
 /********************** macros and definitions *******************************/
 // DUMMYS PARA PROBAR
@@ -47,13 +47,21 @@
 #define TOPE_PRECIO 1000000
 #define MAX_STOCK 10
 
+#define CONFIG_FIRMA 0xC0DE0002u
+
 /* Modes to excite Task System */
 typedef enum task_system_mode {NORMAL, SETUP, FALLA} task_system_mode_t;
+
+
 
 #define SYSTEM_DTA_QTY	1
 
 /********************** internal data declaration ****************************/
 task_system_dta_t task_system_dta_list[SYSTEM_DTA_QTY];
+
+/* Copia de trabajo de la configuración que va/viene de la EEPROM.
+ * A nivel de archivo para que la vean los tres statecharts. */
+static cfg_memoria_t cfg_memoria;
 
 /********************** internal functions declaration ***********************/
 void task_system_normal_statechart(void);
@@ -64,6 +72,8 @@ void entrar_normal( task_system_dta_t* , task_system_st_t );
 void entrar_setup( task_system_dta_t* , task_system_st_t );
 void task_system_set_mode(task_system_mode_t);
 void armar_valores(task_system_dta_t*, display_valores_t*);
+static void armar_config(task_system_dta_t *p, cfg_memoria_t *c);
+static void persistir_config(task_system_dta_t *p);
 
 /********************** internal data definition *****************************/
 const char *p_task_system 		= "Task System (System Statechart)";
@@ -91,15 +101,13 @@ void task_system_init(void *parameters)
 
 	init_event_task_system();
 
-	task_system_set_mode(NORMAL);
-
 	for (index = 0; SYSTEM_DTA_QTY > index; index++)
 	{
 		/* Update Task System Data Pointer */
 		p_task_system_dta = &task_system_dta_list[index];
 
 		/* Init & Print out: Task execution FSM */
-		state = ST_SYS_ESPERA;
+		state = ST_SYS_CARGANDO;
 		p_task_system_dta->state = state;
 
 		event = EV_SYS_NORMAL; // Indistinto total está la flag en false.
@@ -115,7 +123,7 @@ void task_system_init(void *parameters)
 					GET_NAME(b_event), (b_event ? "true" : "false"));
 	}
 
-
+	/* Valores por defecto*/
 	p_task_system_dta->canales[0].precio_cv = PRECIO1;  p_task_system_dta->canales[0].stock = STOCK1;
 	p_task_system_dta->canales[1].precio_cv = PRECIO2;  p_task_system_dta->canales[1].stock = STOCK2;
 	p_task_system_dta->canales[2].precio_cv = PRECIO3;  p_task_system_dta->canales[2].stock = STOCK3;
@@ -124,8 +132,6 @@ void task_system_init(void *parameters)
 	p_task_system_dta->recaudado = 0;
 	p_task_system_dta->q_ventas  = 0;
 	p_task_system_dta->tick      = 0;
-
-
 
 	task_system_set_mode(NORMAL);
 
@@ -167,16 +173,10 @@ void task_system_normal_statechart(void)
 {
 	task_system_dta_t *p_task_system_dta;
 	display_valores_t v;
-	static bool primer_acceso = true;
 	uint32_t t;
+	static bool lectura_pedida = false;
 	/* Update Task System Data Pointer */
 	p_task_system_dta = &task_system_dta_list[0];
-
-	//Primer acceso
-	if (primer_acceso == true){
-		entrar_normal(p_task_system_dta, ST_SYS_ESPERA);
-	}
-	primer_acceso = false;
 
 	if (true == any_event_task_system())
 	{
@@ -203,6 +203,27 @@ void task_system_normal_statechart(void)
 
 	switch (p_task_system_dta->state)
 	{
+		case ST_SYS_CARGANDO:
+			if (!lectura_pedida) {
+				cargar_config(sizeof cfg_memoria);
+				lectura_pedida = true;
+			}
+
+			if (config_lista(&cfg_memoria, sizeof cfg_memoria)) {
+				if ( cfg_memoria.firma == CONFIG_FIRMA ){
+					for ( int i = 0 ; i < Q_CANALES ; i++ ) {
+						p_task_system_dta->canales[i] = cfg_memoria.canales[i];
+					}
+					p_task_system_dta->recaudado = cfg_memoria.recaudado;
+					p_task_system_dta->q_ventas = cfg_memoria.q_ventas;
+
+				} else {
+					persistir_config(p_task_system_dta);
+				}
+				entrar_normal(p_task_system_dta, ST_SYS_ESPERA);
+			}
+
+			break;
 
 		case ST_SYS_ESPERA:
 
@@ -225,7 +246,7 @@ void task_system_normal_statechart(void)
 			if ( p_task_system_dta->event == EV_SYS_NEXT && p_task_system_dta->flag == true ){
 				p_task_system_dta->seleccion = ( p_task_system_dta->seleccion +1 ) % Q_CANALES;
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SIN_STOCK_SIN_CREDITO, v);
+				set_display(PANTALLA_SELECCION, v);
 			} else
 			if ( ( p_task_system_dta->event == EV_SYS_ESC && p_task_system_dta->flag == true )|| p_task_system_dta->tick == 0 ){
 				entrar_normal(p_task_system_dta, ST_SYS_ESPERA);
@@ -260,6 +281,8 @@ void task_system_normal_statechart(void)
 				p_task_system_dta->credito = p_task_system_dta->credito - p_task_system_dta->canales[p_task_system_dta->seleccion].precio_cv;
 				p_task_system_dta->q_ventas++;
 				p_task_system_dta->recaudado = p_task_system_dta->recaudado + p_task_system_dta->canales[p_task_system_dta->seleccion].precio_cv;
+				/* Venta hecha: grabo en EEPROM */
+				persistir_config(p_task_system_dta);
 				entrar_normal(p_task_system_dta, ST_SYS_ESPERA);
 			}
 			break;
@@ -279,6 +302,7 @@ void task_system_normal_statechart(void)
 
 	p_task_system_dta->flag = false;
 	if (get_temperatura(&t) && t > TEMP_MAX){
+		p_task_system_dta->temperatura = t;
 		entrar_falla(p_task_system_dta, ST_SYS_TEMPERATURA);
 	}
 }
@@ -305,6 +329,7 @@ void task_system_falla_statechart(void)
 
 
 			if ( get_temperatura(&t) && t < (TEMP_MAX - 2) ){
+				p_task_system_dta->temperatura = t;
 				entrar_normal(p_task_system_dta, ST_SYS_ESPERA);
 			}
 			break;
@@ -337,7 +362,9 @@ void task_system_setup_statechart(void)
 		p_task_system_dta->event = get_event_task_system();
 	}
 
+	/* Llave a NORMAL desde cualquier submenú: lo editado va a la EEPROM */
 	if ( p_task_system_dta->event == EV_SYS_NORMAL && p_task_system_dta->flag == true ){
+		persistir_config(p_task_system_dta);
 		entrar_normal(p_task_system_dta, ST_SYS_ESPERA);
 	}
 
@@ -349,8 +376,9 @@ void task_system_setup_statechart(void)
 
 			if ( p_task_system_dta->event == EV_SYS_ENTER && p_task_system_dta->flag == true ){
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SETUP_MENU1, v);
 				p_task_system_dta->state = ST_SYS_MENU1;
+				set_display(PANTALLA_SETUP_MENU1, v);
+
 			}
 
 			break;
@@ -359,18 +387,21 @@ void task_system_setup_statechart(void)
 
 			if ( p_task_system_dta->event == EV_SYS_ENTER && p_task_system_dta->flag == true ){
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SETUP_MENU2, v);
 				p_task_system_dta->state = ST_SYS_MENU2;
+				set_display(PANTALLA_SETUP_MENU2, v);
+
 			} else
 			if ( p_task_system_dta->event == EV_SYS_NEXT && p_task_system_dta->flag == true ){
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SETUP_MENU1, v);
 				p_task_system_dta->seleccion = (p_task_system_dta->seleccion+1) % Q_CANALES;
+				set_display(PANTALLA_SETUP_MENU1, v);
+
 			} else
 			if ( p_task_system_dta->event == EV_SYS_ESC && p_task_system_dta->flag == true ){
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SETUP_MAIN, v);
 				p_task_system_dta->state = ST_SYS_MAIN;
+				set_display(PANTALLA_SETUP_MAIN, v);
+
 			}
 
 
@@ -379,18 +410,20 @@ void task_system_setup_statechart(void)
 		case ST_SYS_MENU2:
 			if ( p_task_system_dta->event == EV_SYS_ENTER && p_task_system_dta->flag == true ){
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SETUP_MENU3, v);
 				p_task_system_dta->state = ST_SYS_MENU3;
+				set_display(PANTALLA_SETUP_MENU3, v);
 			} else
 			if ( p_task_system_dta->event == EV_SYS_NEXT && p_task_system_dta->flag == true ){
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SETUP_MENU2, v);
 				p_task_system_dta->parametro = (p_task_system_dta->parametro + 1) % PARAM_QTY;
+				set_display(PANTALLA_SETUP_MENU2, v);
+
 			} else
 			if ( p_task_system_dta->event == EV_SYS_ESC && p_task_system_dta->flag == true ){
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SETUP_MENU1, v);
 				p_task_system_dta->state = ST_SYS_MENU1;
+				set_display(PANTALLA_SETUP_MENU1, v);
+
 			}
 
 			break;
@@ -412,8 +445,9 @@ void task_system_setup_statechart(void)
 			} else
 			if ( (true == p_task_system_dta->flag) && (EV_SYS_ESC == p_task_system_dta->event) ){
 				armar_valores(p_task_system_dta, &v);
-				set_display(PANTALLA_SETUP_MENU2, v);
 				p_task_system_dta->state = ST_SYS_MENU2;
+				set_display(PANTALLA_SETUP_MENU2, v);
+
 			}
 			break;
 		default:
@@ -423,13 +457,32 @@ void task_system_setup_statechart(void)
 	p_task_system_dta->flag = false;
 }
 
+/* dta → cfg (espejo de la copia que se hace en CARGANDO) */
+static void armar_config(task_system_dta_t *p, cfg_memoria_t *c)
+{
+	c->firma = CONFIG_FIRMA;
+	for (int i = 0; i < Q_CANALES; i++) c->canales[i] = p->canales[i];
+	c->recaudado = p->recaudado;
+	c->q_ventas  = p->q_ventas;
+}
+
+
+static void persistir_config(task_system_dta_t *p)
+{
+	armar_config(p, &cfg_memoria);
+	guardar_config(&cfg_memoria, sizeof cfg_memoria);	// TODO: reintentar si devuelve false
+}
+
 void armar_valores(task_system_dta_t *p, display_valores_t *v){
     v->seleccion   = p->seleccion;
     v->precio_cv   = p->canales[p->seleccion].precio_cv;
     v->stock       = p->canales[p->seleccion].stock;
     v->credito_cv  = p->credito;
     v->parametro   = (uint32_t)p->parametro;
+    v->temperatura = p->temperatura;
 }
+
+
 
 void entrar_setup( task_system_dta_t* p_task_system_dta, task_system_st_t task_system_st){
 	display_valores_t v;
@@ -487,5 +540,3 @@ void task_system_set_mode(task_system_mode_t task_system_mode)
 }
 
 /********************** end of file ******************************************/
-
-

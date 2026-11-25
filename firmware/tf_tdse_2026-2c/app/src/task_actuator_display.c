@@ -20,7 +20,8 @@
 #define DEL_DSP_MIN				0ul
 #define DEL_DSP_MED				50ul
 #define DEL_DSP_MAX				500ul
-
+#define DSP_PARAM_PRECIO		0ul
+#define DSP_PARAM_STOCK			1ul
 /********************** internal data declaration ****************************/
 task_actuator_display_dta_t task_actuator_display_dta;
 
@@ -169,63 +170,113 @@ void task_actuator_display_setup(task_actuator_display_dta_t *p_dta)
 	char line0[COLUMNS + 1];
 	char line1[COLUMNS + 1];
 
-
 	switch (p_dta->pantalla)
 	{
 		case PANTALLA_ESPERA:
-				snprintf(line0, sizeof(line0), "NORMAL");
-				snprintf(line1, sizeof(line1), "Espera");
-				break;
+			snprintf(line0, sizeof(line0), "Elija producto");
+			snprintf(line1, sizeof(line1), "Credito $%4lu,%02lu",
+			         (unsigned long)(p_dta->valores.credito_cv / 100),
+			         (unsigned long)(p_dta->valores.credito_cv % 100));
+			break;
 
 		case PANTALLA_SELECCION:
-	    	snprintf(line0, sizeof(line0), "Canal %u  $%4lu,%02lu",
-	             (unsigned)(p_dta->valores.seleccion + 1),
-	             (unsigned long)(p_dta->valores.precio_cv / 100),
-	             (unsigned long)(p_dta->valores.precio_cv % 100));
-			snprintf(line1, sizeof(line1), "Credito  $%4lu,%02lu",
-	             (unsigned long)(p_dta->valores.credito_cv / 100),
-	             (unsigned long)(p_dta->valores.credito_cv % 100));
+			snprintf(line0, sizeof(line0), "Canal %u $%4lu,%02lu",
+			         (unsigned)(p_dta->valores.seleccion + 1),
+			         (unsigned long)(p_dta->valores.precio_cv / 100),
+			         (unsigned long)(p_dta->valores.precio_cv % 100));
+			snprintf(line1, sizeof(line1), "Credito $%4lu,%02lu",
+			         (unsigned long)(p_dta->valores.credito_cv / 100),
+			         (unsigned long)(p_dta->valores.credito_cv % 100));
 			break;
 
 		case PANTALLA_ENTREGANDO:
-			snprintf(line0, sizeof(line0), "NORMAL");
-			snprintf(line1, sizeof(line1), "Entregando");
+			snprintf(line0, sizeof(line0), "Entregando...");
+			snprintf(line1, sizeof(line1), "Retire Canal %u",
+			         (unsigned)(p_dta->valores.seleccion + 1));
 			break;
 
 		case PANTALLA_SIN_STOCK_SIN_CREDITO:
-			snprintf(line0, sizeof(line0), "NORMAL");
-			snprintf(line1, sizeof(line1), "Sin Stock");
+			if (p_dta->valores.stock == 0)
+			{
+				snprintf(line0, sizeof(line0), "Sin Stock");
+				snprintf(line1, sizeof(line1), "Canal %u vacio",
+				         (unsigned)(p_dta->valores.seleccion + 1));
+			}
+			else
+			{
+				uint32_t falta_cv = (p_dta->valores.precio_cv > p_dta->valores.credito_cv)
+				                    ? (p_dta->valores.precio_cv - p_dta->valores.credito_cv)
+				                    : 0;
+				snprintf(line0, sizeof(line0), "Falta Credito");
+				snprintf(line1, sizeof(line1), "Faltan  $%4lu,%02lu",
+				         (unsigned long)(falta_cv / 100),
+				         (unsigned long)(falta_cv % 100));
+			}
 			break;
 
 		case PANTALLA_FALLA_TEMPERATURA:
-			snprintf(line0, sizeof(line0), "FALLA");
-			snprintf(line1, sizeof(line1), "Temperatura");
+			snprintf(line0, sizeof(line0), "FALLA Temperatura");
+			snprintf(line1, sizeof(line1), "%u grados",
+					(unsigned long)(p_dta->valores.temperatura));
 			break;
 
 		case PANTALLA_FALLA_ATASCO:
-			snprintf(line0, sizeof(line0), "FALLA");
-			snprintf(line1, sizeof(line1), "Atasco");
+			snprintf(line0, sizeof(line0), "FALLA Atasco C%u",
+			         (unsigned)(p_dta->valores.seleccion + 1));
+			snprintf(line1, sizeof(line1), "Presione ESC");
 			break;
 
 		case PANTALLA_SETUP_MAIN:
-			snprintf(line0, sizeof(line0), "SETUP");
-			snprintf(line1, sizeof(line1), "MAIN");
+			snprintf(line0, sizeof(line0), "MODO SETUP");
+			snprintf(line1, sizeof(line1), "ENTER: Config.");
 			break;
 
 		case PANTALLA_SETUP_MENU1:
-			snprintf(line0, sizeof(line0), "SETUP");
-			snprintf(line1, sizeof(line1), "MENU1");
+			snprintf(line0, sizeof(line0), "SETUP - Canal %u",
+			         (unsigned)(p_dta->valores.seleccion + 1));
+			snprintf(line1, sizeof(line1), "$%4lu  Stock:%2lu",
+			         (unsigned long)(p_dta->valores.precio_cv / 100),
+			         (unsigned long)(p_dta->valores.stock));
 			break;
 
 		case PANTALLA_SETUP_MENU2:
-			snprintf(line0, sizeof(line0), "SETUP");
-			snprintf(line1, sizeof(line1), "MENU2");
+			snprintf(line0, sizeof(line0), "SETUP Canal %u",
+			         (unsigned)(p_dta->valores.seleccion + 1));
+			if (p_dta->valores.parametro == DSP_PARAM_PRECIO)
+			{
+				snprintf(line1, sizeof(line1), ">Precio $%4lu,%02lu",
+				         (unsigned long)(p_dta->valores.precio_cv / 100),
+				         (unsigned long)(p_dta->valores.precio_cv % 100));
+			}
+			else
+			{
+				snprintf(line1, sizeof(line1), ">Stock: %2lu unid.",
+				         (unsigned long)(p_dta->valores.stock));
+			}
 			break;
 
 		case PANTALLA_SETUP_MENU3:
-			snprintf(line0, sizeof(line0), "SETUP");
-			snprintf(line1, sizeof(line1), "MENU3");
+			if (p_dta->valores.parametro == DSP_PARAM_PRECIO)
+			{
+				snprintf(line0, sizeof(line0), "C%u Edit Precio",
+				         (unsigned)(p_dta->valores.seleccion + 1));
+				snprintf(line1, sizeof(line1), "Precio: $%4lu,%02lu",
+				         (unsigned long)(p_dta->valores.precio_cv / 100),
+				         (unsigned long)(p_dta->valores.precio_cv % 100));
+			}
+			else
+			{
+				snprintf(line0, sizeof(line0), "C%u Edit Stock",
+				         (unsigned)(p_dta->valores.seleccion + 1));
+				snprintf(line1, sizeof(line1), "Stock:  %2lu / 10",
+				         (unsigned long)(p_dta->valores.stock));
+			}
 			break;
+
+		case PANTALLA_CARGANDO:
+			snprintf(line0, sizeof(line0), "Cargando datos...");
+			snprintf(line1, sizeof(line1), "POr favor espere");
+		break;
 
 		default:
 			return;
@@ -237,7 +288,6 @@ void task_actuator_display_setup(task_actuator_display_dta_t *p_dta)
 	put_event_task_actuator_display(0, 0, line0);
 	put_event_task_actuator_display(0, 1, line1);
 }
-
 
 
 /********************** end of file ******************************************/

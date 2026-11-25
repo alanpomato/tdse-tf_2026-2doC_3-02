@@ -116,7 +116,10 @@ int main(void)
   MX_TIM3_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-
+  uint32_t w = 0xC0DE0001, r = 0;
+  //HAL_I2C_Mem_Write(&hi2c1, 0xA0, 0x0000, I2C_MEMADD_SIZE_16BIT, (uint8_t *)&w, sizeof w, 100);
+  //HAL_Delay(5);
+  HAL_I2C_Mem_Read (&hi2c1, 0xA0, 0x0000, I2C_MEMADD_SIZE_16BIT, (uint8_t *)&r, sizeof r, 100);
   /* Application Init */
   app_init();
 

@@ -26,7 +26,8 @@ typedef enum task_system_ev {EV_SYS_ENTER,
 							EV_SYS_MONEDA} task_system_ev_t; //
 
 /* State of Task System */
-typedef enum task_system_st {ST_SYS_ESPERA,
+typedef enum task_system_st {ST_SYS_CARGANDO,
+							ST_SYS_ESPERA,
 							ST_SYS_SELECCION,
 							ST_SYS_ENTREGANDO,
 							ST_SYS_SIN_STOCK_FALTA_CREDITO,
@@ -50,6 +51,14 @@ typedef struct
 	uint32_t	stock;
 } canal_t;
 
+typedef struct
+{
+	uint32_t			firma;
+	canal_t canales[Q_CANALES];
+	uint32_t recaudado;
+	uint32_t q_ventas;
+} cfg_memoria_t;
+
 
 
 typedef struct
@@ -64,6 +73,7 @@ typedef struct
 	task_system_st_t	state;
 	task_system_ev_t	event;
 	bool				flag;
+	uint16_t			temperatura;
 } task_system_dta_t;
 
 /********************** external data declaration ****************************/
