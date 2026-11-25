@@ -34,7 +34,8 @@ typedef enum { PANTALLA_ESPERA,
 				PANTALLA_SETUP_MAIN,
 				PANTALLA_SETUP_MENU1,
 				PANTALLA_SETUP_MENU2,
-				PANTALLA_SETUP_MENU3
+				PANTALLA_SETUP_MENU3,
+				PANTALLA_CARGANDO
 } pantalla_t;
 
 typedef struct
@@ -44,6 +45,7 @@ typedef struct
 	uint32_t			credito_cv;
 	uint32_t			parametro;
 	uint32_t			stock;
+	uint16_t			temperatura;
 }display_valores_t;
 
 
@@ -59,7 +61,7 @@ typedef struct
 	uint32_t			column;
 	char				character;
 	pantalla_t 				pantalla;
-	display_valores_t valores;
+	display_valores_t 	valores;
 } task_actuator_display_dta_t;
 
 /********************** external data declaration ****************************/

@@ -20,6 +20,7 @@
 #include "task_sensor_adc.h"
 
 #include "task_actuator_pwm.h"
+#include "task_actuator_memoria.h"
 
 
 /********************** macros and definitions *******************************/
@@ -51,7 +52,8 @@ const task_cfg_t task_cfg_list[]	= {
 		{task_system_init, 		task_system_update, 	NULL},
 		{task_actuator_gpio_init,	task_actuator_gpio_update, 	NULL},
 		{task_actuator_pwm_init,	task_actuator_pwm_update, 	NULL},
-		{task_actuator_display_init,	task_actuator_display_update, 	NULL}
+		{task_actuator_display_init,	task_actuator_display_update, 	NULL},
+		{task_actuator_memoria_init,	task_actuator_memoria_update, 	NULL}
 };
 
 #define TASK_QTY	(sizeof(task_cfg_list)/sizeof(task_cfg_t))
